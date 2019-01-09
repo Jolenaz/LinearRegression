@@ -1,5 +1,31 @@
 import sys
 import os.path
+import math
+import numpy as np
+
+from sys import platform as sys_pf
+if sys_pf == 'darwin':
+    import matplotlib
+    matplotlib.use("TkAgg")
+
+import matplotlib.pyplot as plt
+
+d = np.linspace(0, 2, 100)
+
+plt.plot(d, d, label='linear')
+plt.plot(d, d**2, label='quadratic')
+plt.plot(d, d**3, label='cubic')
+
+plt.xlabel('x label')
+plt.ylabel('y label')
+
+plt.title("Simple Plot")
+
+plt.legend()
+
+plt.show()
+
+
 
 if os.path.isfile("data.csv"):
     fd = open("data.csv", "r+")
@@ -25,20 +51,26 @@ for line in data:
         print (line)
         exit()
 
-print parsedData
+print (parsedData)
 
 m = len(parsedData)
-i = 0
-t0 = 0
-t1 = 0
-alpha = 0.0001 / float(sum([it[0] for it in parsedData]))
-while (i < 100000):
-    tmp0 = t0
-    tmp1 = t1
-    t0 = tmp0 - alpha * sum([ ( it[0] * tmp1 + tmp0 - it[1] ) for it in parsedData ]) / m
-    t1 = tmp1 - alpha * sum([ ( ( it[0] * tmp1 + tmp0 - it[1] ) * it[0] ) for it in parsedData ]) / m
-    i += 1
-    
-print (t1)
-print (t0)
 
+x = [ it[0] for it in parsedData ]
+y = [ it[1] for it in parsedData ]
+xy = [ (it[1] * it[0]) for it in parsedData ]
+x2 = [ (it[0] * it[0]) for it in parsedData ]
+xm = sum(x) / m
+ym = sum(y) / m
+
+Sigxy = [ ((it[1] - ym) * (it[0] - xm))  for it in parsedData ]
+Sigx  = [ ((it[0] - xm) * (it[0] - xm))  for it in parsedData ]
+Sigy  = [ ((it[1] - ym) * (it[1] - ym))  for it in parsedData ]
+
+a = float(m * sum(xy) - sum(x) * sum(y) ) / float(m * sum(x2) - sum(x) * sum(x))
+b = ym - a * xm 
+
+print (a)
+print (b)
+
+r2 = sum(Sigxy) / math.sqrt(sum(Sigx) * sum(Sigy))
+print (r2)
