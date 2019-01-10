@@ -12,4 +12,4 @@ print ("Enter a mileage: ")
 data = sys.stdin.readline()
 
 print ("The predicted value of your car is:")
-print (int(float(data) * float(A[0]) + float(A[1])))
+print (float(float(data) * float(A[0]) + float(A[1])))

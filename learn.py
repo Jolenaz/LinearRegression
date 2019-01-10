@@ -10,34 +10,24 @@ if sys_pf == 'darwin':
 
 import matplotlib.pyplot as plt
 
-d = np.linspace(0, 2, 100)
-
-plt.plot(d, d, label='linear')
-plt.plot(d, d**2, label='quadratic')
-plt.plot(d, d**3, label='cubic')
-
-plt.xlabel('x label')
-plt.ylabel('y label')
-
-plt.title("Simple Plot")
-
-plt.legend()
-
-plt.show()
-
-
-
 if os.path.isfile("data.csv"):
     fd = open("data.csv", "r+")
     print ("data found")
 else:
-    print ("The file data is not found")
+    print ("The file data is not found,\n the file data.csv must be at the root of the program")
     exit()
 
 data = fd.readlines()
 parsedData = []
+firstLine = True
+xLabel = "x value"
+yLabel = "y value"
 for line in data:
-    if "km,price" in line:
+    if firstLine is True:
+        firstLine = False
+        parsedLine = [item.replace("\n","") for item in line.split(",")]
+        xLabel = parsedLine[0]
+        yLabel = parsedLine[1]
         continue
     try:
         parsedLine = [int(item.replace("\n","")) for item in line.split(",")]
@@ -50,8 +40,6 @@ for line in data:
         print ("error at line in data parsing :")
         print (line)
         exit()
-
-print (parsedData)
 
 m = len(parsedData)
 
@@ -69,8 +57,18 @@ Sigy  = [ ((it[1] - ym) * (it[1] - ym))  for it in parsedData ]
 a = float(m * sum(xy) - sum(x) * sum(y) ) / float(m * sum(x2) - sum(x) * sum(x))
 b = ym - a * xm 
 
-print (a)
-print (b)
-
 r2 = sum(Sigxy) / math.sqrt(sum(Sigx) * sum(Sigy))
-print (r2)
+
+X = np.linspace(min(x), max(x), 1000)
+
+plt.scatter(x, y)
+plt.plot(X, a*X+b)
+
+plt.xlabel(xLabel)
+plt.ylabel(yLabel)
+plt.title("Linear Reg")
+
+plt.show()
+
+fd = open("coef.txt", "w+")
+fd.writelines(str(a) + " " + str(b))
