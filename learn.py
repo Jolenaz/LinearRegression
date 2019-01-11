@@ -88,7 +88,7 @@ plt.plot(X, t1*X+t0, 'g-', label='iter')
 
 plt.xlabel(xLabel)
 plt.ylabel(yLabel)
-plt.title("Linear Reg")
+plt.title("Linear Reg. CoeffCorr = " + str(round(r2,3)))
 
 plt.legend(loc='best')
 
